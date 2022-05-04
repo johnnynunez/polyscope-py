@@ -33,6 +33,7 @@ void bind_curve_network(py::module& m);
 void bind_volume_mesh(py::module& m);
 void bind_volume_grid(py::module& m);
 void bind_floating_quantities(py::module& m);
+void bind_implicit_surface(py::module& m);
 void bind_imgui(py::module& m);
 
 // Signal handler (makes ctrl-c work, etc)
@@ -325,6 +326,7 @@ PYBIND11_MODULE(polyscope_bindings, m) {
   bind_volume_mesh(m);
   bind_volume_grid(m);
   bind_floating_quantities(m);
+  bind_implicit_surface(m);
   bind_imgui(m);
 
 }

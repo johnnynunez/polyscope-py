@@ -5,3 +5,4 @@ from polyscope.curve_network import *
 from polyscope.volume_mesh import *
 from polyscope.volume_grid import *
 from polyscope.floating_quantities import *
+from polyscope.implicit_surface import *

@@ -4,8 +4,12 @@
 
 #include "Eigen/Dense"
 
-#include "polyscope/floating_quantity_structure.h"
 #include "polyscope/polyscope.h"
+
+#include "polyscope/color_render_image.h"
+#include "polyscope/depth_render_image.h"
+#include "polyscope/floating_quantity_structure.h"
+#include "polyscope/scalar_render_image.h"
 
 #include "utils.h"
 
@@ -30,8 +34,6 @@ void bind_floating_quantities(py::module& m) {
 
   m.def("add_floating_scalar_image", &ps::addFloatingScalarImage<Eigen::VectorXd>, "Add scalar image (expects flat)",
         py::return_value_policy::reference);
-  m.def("remove_floating_scalar_image", &ps::removeFloatingScalarImage, "Remove scalar image");
- 
 
 
   // == Floating color images
@@ -41,7 +43,34 @@ void bind_floating_quantities(py::module& m) {
 
   m.def("add_floating_color_image", &ps::addFloatingColorImage<Eigen::MatrixXd>, "Add color image (expects flatx3)",
         py::return_value_policy::reference);
-  m.def("remove_floating_color_image", &ps::removeFloatingColorImage, "Remove color image");
+
+  // == Floating render depth image
+
+  py::class_<ps::DepthRenderImage>(m, "DepthRenderImage")
+    .def("set_enabled", &ps::DepthRenderImage::setEnabled, "Enable the image")
+    .def("set_material", &ps::DepthRenderImage::setMaterial, "Set material")
+    .def("get_material", &ps::DepthRenderImage::getMaterial, "Get material")
+    .def("set_transparency", &ps::DepthRenderImage::setTransparency, "Set transparency")
+    .def("get_transparency", &ps::DepthRenderImage::getTransparency, "Get transparency")
+    .def("set_color", &ps::DepthRenderImage::setColor, "Set color")
+    .def("get_color", &ps::DepthRenderImage::getColor, "Get color")
+  ;
+  
+
+  py::class_<ps::ColorRenderImage>(m, "ColorRenderImage")
+    .def("set_enabled", &ps::ColorRenderImage::setEnabled, "Enable the image")
+    .def("set_material", &ps::ColorRenderImage::setMaterial, "Set material")
+    .def("get_material", &ps::ColorRenderImage::getMaterial, "Get material")
+    .def("set_transparency", &ps::ColorRenderImage::setTransparency, "Set transparency")
+    .def("get_transparency", &ps::ColorRenderImage::getTransparency, "Get transparency")
+  ;
+
+  bindScalarQuantity<ps::ScalarRenderImage>(m, "ScalarRenderImage") 
+    .def("set_material", &ps::ScalarRenderImage::setMaterial, "Set material")
+    .def("get_material", &ps::ScalarRenderImage::getMaterial, "Get material")
+    .def("set_transparency", &ps::ScalarRenderImage::setTransparency, "Set transparency")
+    .def("get_transparency", &ps::ScalarRenderImage::getTransparency, "Get transparency")
+  ;
 
   // bindStructure<ps::FloatingQuantityStructure>(m, "FloatingQuantityStructure");
 }

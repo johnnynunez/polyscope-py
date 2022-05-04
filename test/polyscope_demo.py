@@ -33,7 +33,6 @@ def main():
     # Load a mesh argument
     verts, faces = pp3d.read_mesh(args.mesh)
 
-
     # Set up a simple callback and UI button
     def my_function():
         pass
@@ -42,6 +41,27 @@ def main():
         # Executed every frame
         if(psim.Button("Test button")):
             my_function()
+        
+
+        if(psim.Button("Implicit")):
+
+            def sphere_sdf_func(p):
+                return np.linalg.norm(p, axis=-1) - 1.
+
+            def color_func(p):
+                return np.clip(p, a_min=0, a_max=1.) # a really lame color function
+            
+            def scalar_func(p):
+                return p[:,0] # x coord
+    
+            # polyscope.render_implicit_surface("sphere sdf", sphere_sdf, step_factor=0.66, n_max_steps=2048, miss_dist=100., hit_dist=0.0001, autoscale_hit_dist=False)
+
+            polyscope.render_implicit_surface("sphere sdf", sphere_sdf_func, enabled=False)
+
+            polyscope.render_implicit_surface_color("sphere sdf color", sphere_sdf_func, color_func, enabled=False)
+
+            polyscope.render_implicit_surface_scalar("sphere sdf scalar", sphere_sdf_func, scalar_func, enabled=False)
+
     polyscope.set_user_callback(callback)
    
 
