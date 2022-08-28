@@ -1542,22 +1542,19 @@ class TestFloatingQuantities(unittest.TestCase):
     def test_floating_scalar_image(self):
     
         # Basic add
-        ps.add_floating_scalar_image("test scalar", (500,600), np.random.rand(500,600), enabled=True)
-        ps.add_floating_scalar_image("test scalar2", (500,600), np.random.rand(500*600), enabled=True)
+        ps.add_scalar_image_quantity("test scalar", np.random.rand(500,600), enabled=True)
         ps.show(3)
 
         # Remove
-        ps.remove_floating_scalar_image("test scalar")
         ps.remove_floating_quantity("test scalar2")
 
         # Fullscreen show
-        ps.add_floating_scalar_image("test scalar", (500,600), np.random.rand(500,600), enabled=True, show_fullscreen=True)
+        ps.add_scalar_image_quantity("test scalar", np.random.rand(500,600), enabled=True, show_fullscreen=True)
         ps.show(3)
-        ps.remove_floating_scalar_image("test scalar")
 
 
         # Other various options
-        ps.add_floating_scalar_image("test scalar", (500,600), np.random.rand(500,600), show_fullscreen=True, cmap='reds', vminmax=(-1,2), datatype='symmetric')
+        ps.add_scalar_image_quantity("test scalar", np.random.rand(500,600), show_fullscreen=True, cmap='reds', vminmax=(-1,2), datatype='symmetric')
         ps.show(3)
 
 
@@ -1567,19 +1564,46 @@ class TestFloatingQuantities(unittest.TestCase):
     def test_floating_color_image(self):
     
         # Basic add
-        ps.add_floating_color_image("test color", (500,600), np.random.rand(500,600,3), enabled=True)
-        ps.add_floating_color_image("test color2", (500,600), np.random.rand(500*600,3), enabled=True)
+        ps.add_color_image_quantity("test color", np.random.rand(500,600,3), enabled=True)
         ps.show(3)
 
         # Remove
-        ps.remove_floating_color_image("test color")
         ps.remove_floating_quantity("test color2")
 
         # Fullscreen show
-        ps.add_floating_color_image("test color", (500,600), np.random.rand(500,600,3), enabled=True, show_fullscreen=True)
+        ps.add_color_image_quantity("test color", np.random.rand(500,600,3), enabled=True, show_fullscreen=True)
         ps.show(3)
         
         ps.remove_all_floating_quantities()
+    
+    def test_depth_render_image(self):
+    
+        # Basic add
+        depths = np.random.rand(500,600)
+        normals = np.random.rand(500,600,3)
+        ps.add_depth_render_image_quantity("test depth", depths, normals, enabled=True, color=(0.5, 0.5, 0.1), material="clay", transparency=0.4)
+        ps.show(3)
+
+        # Remove
+        ps.remove_floating_quantity("test depth")
+
+        ps.remove_all_floating_quantities()
+    
+
+    def test_color_render_image(self):
+    
+        # Basic add
+        depths = np.random.rand(500,600)
+        normals = np.random.rand(500,600,3)
+        colors = np.random.rand(500,600,3)
+        ps.add_color_render_image_quantity("test color", depths, normals, colors, enabled=True, material="clay", transparency=0.4)
+        ps.show(3)
+
+        # Remove
+        ps.remove_floating_quantity("test color")
+
+        ps.remove_all_floating_quantities()
+
 
 class TestVolumeGrid(unittest.TestCase):
 
@@ -1664,6 +1688,7 @@ if __name__ == '__main__':
     # Note that since these tests depend on the bound object's global state, 
     # we generally cannot continue past the first failed test.
     ps.set_errors_throw_exceptions(True)
+    print(f"initializing with backend {ps_backend}")
     ps.init(ps_backend) 
 
     unittest.main()
