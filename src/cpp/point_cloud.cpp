@@ -74,7 +74,13 @@ void bind_point_cloud(py::module& m) {
     .def("add_vector_quantity", &ps::PointCloud::addVectorQuantity<Eigen::MatrixXd>, "Add a vector function at points",
         py::arg("name"), py::arg("values"), py::arg("vector_type")=ps::VectorType::STANDARD, py::return_value_policy::reference)
     .def("add_vector_quantity2D", &ps::PointCloud::addVectorQuantity2D<Eigen::MatrixXd>, "Add a vector function at points",
-        py::arg("name"), py::arg("values"), py::arg("vector_type")=ps::VectorType::STANDARD, py::return_value_policy::reference);
+        py::arg("name"), py::arg("values"), py::arg("vector_type")=ps::VectorType::STANDARD, py::return_value_policy::reference)
+    
+    // experimental
+    .def("get_position_render_buffer", &ps::PointCloud::getPositionRenderBuffer)
+    .def("render_buffer_data_externally_updated", &ps::PointCloud::renderBufferDataExternallyUpdated)
+
+    ;
 
   // Static adders and getters
   m.def("register_point_cloud", &ps::registerPointCloud<Eigen::MatrixXd>, 

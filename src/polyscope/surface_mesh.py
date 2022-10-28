@@ -5,6 +5,8 @@ from polyscope.core import str_to_datatype, str_to_vectortype, str_to_param_coor
                            str_to_param_viz_style, str_to_back_face_policy, back_face_policy_to_str,\
                            glm3
 
+import polyscope.experimental as experimental
+
 class SurfaceMesh:
 
     # This class wraps a _reference_ to the underlying object, whose lifetime is managed by Polyscope
@@ -132,6 +134,26 @@ class SurfaceMesh:
             self.bound_mesh.update_vertex_positions2D(vertices)
         else:
             raise ValueError("bad vertex shape")
+    
+    ## Experimental
+
+    def render_buffer_data_externally_updated(self):
+        return self.bound_mesh.render_buffer_data_externally_updated()
+
+    def update_vertex_positions_from_device_array(self, device_arr):
+
+        experimental.check_device_module_availibility()
+       
+        # get a mapped buffer device buffer
+        buff = self.bound_mesh.get_vertex_positions_render_buffer()
+        key = self.bound_mesh.get_unique_prefix() + "##positions"
+        mapped_buff = experimental.get_mapped_buffer(key, buff)
+
+        mapped_buff.set_data_from_array(device_arr, expected_shape=(self.n_vertices(),3), expected_dtype=np.float32)
+
+        self.render_buffer_data_externally_updated()
+
+
 
     ## Options
 

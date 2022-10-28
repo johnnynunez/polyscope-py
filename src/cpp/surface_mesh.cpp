@@ -157,7 +157,12 @@ void bind_surface_mesh(py::module& m) {
            "Add a face intrinsic vector quantity", py::return_value_policy::reference)
       .def("add_one_form_intrinsic_vector_quantity",
            &ps::SurfaceMesh::addOneFormIntrinsicVectorQuantity<Eigen::VectorXd, Eigen::Matrix<bool, Eigen::Dynamic, 1>>,
-           "Add a one form intrinsic vector quantity", py::return_value_policy::reference);
+           "Add a one form intrinsic vector quantity", py::return_value_policy::reference)
+    
+      // Experimental
+      .def("get_vertex_positions_render_buffer", &ps::SurfaceMesh::getVertexPositionsRenderBuffer)
+      .def("render_buffer_data_externally_updated", &ps::SurfaceMesh::renderBufferDataExternallyUpdated)
+    ;
 
 
   // Static adders and getters

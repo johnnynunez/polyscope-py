@@ -25,6 +25,11 @@ def show(forFrames=None):
     else:
         psb.show(forFrames)
 
+### Render engine
+def get_render_engine_backend_name():
+    return psb.get_render_engine_backend_name()
+
+
 ### Structure management
 
 def remove_all_structures():
@@ -432,3 +437,4 @@ def point_render_mode_to_str(val):
 
     raise ValueError("Bad point render mode specifier '{}', should be one of [{}]".format(val, 
         ",".join(["'{}'".format(x) for x in d_point_render_mode.values()])))
+

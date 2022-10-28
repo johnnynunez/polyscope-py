@@ -2,6 +2,10 @@ import polyscope_bindings as psb
 
 from polyscope.core import str_to_datatype, str_to_vectortype, glm3, str_to_point_render_mode, point_render_mode_to_str
 
+import polyscope.experimental as experimental
+
+import numpy as np
+
 class PointCloud:
 
     # This class wraps a _reference_ to the underlying object, whose lifetime is managed by Polyscope
@@ -25,7 +29,6 @@ class PointCloud:
             else:
                 raise ValueError("bad point cloud shape")
 
-
     def check_shape(self, points):
         # Helper to validate arrays
 
@@ -48,19 +51,22 @@ class PointCloud:
         '''Remove a single quantity on the structure'''
         self.bound_cloud.remove_quantity(name)
 
-    # Enable/disable
+    ## Enable/disable
+    
     def set_enabled(self, val=True):
         self.bound_cloud.set_enabled(val)
     def is_enabled(self):
         return self.bound_cloud.is_enabled()
     
-    # Transparency
+    ## Transparency
+    
     def set_transparency(self, val):
         self.bound_cloud.set_transparency(val)
     def get_transparency(self):
         return self.bound_cloud.get_transparency()
    
-    # Transformation things
+    ## Transformation things
+    
     def center_bounding_box(self):
         self.bound_cloud.center_bounding_box()
     def rescale_to_unit(self):
@@ -84,7 +90,8 @@ class PointCloud:
     def get_point_render_mode(self):
         return point_render_mode_to_str(self.bound_cloud.get_point_render_mode())
 
-    # Slice planes
+    ## Slice planes
+    
     def set_cull_whole_elements(self, val):
         self.bound_cloud.set_cull_whole_elements(val)
     def get_cull_whole_elements(self):
@@ -102,7 +109,8 @@ class PointCloud:
         else:
             return self.bound_cloud.get_ignore_slice_plane(plane.get_name())
 
-    # Update
+    ## Update
+
     def update_point_positions(self, points):
         self.check_shape(points)
         
@@ -118,6 +126,25 @@ class PointCloud:
     
     def clear_point_radius_quantity(self):
         self.bound_cloud.clear_point_radius_quantity()
+
+    ## Experimental
+
+    def render_buffer_data_externally_updated(self):
+        return self.bound_cloud.render_buffer_data_externally_updated()
+
+    def update_point_positions_from_device_array(self, device_arr):
+
+        experimental.check_device_module_availibility()
+       
+        # get a mapped buffer device buffer
+        buff = self.bound_cloud.get_position_render_buffer()
+        key = self.bound_cloud.get_unique_prefix() + "##positions"
+        mapped_buff = experimental.get_mapped_buffer(key, buff)
+
+        mapped_buff.set_data_from_array(device_arr, expected_shape=(self.n_points(),3), expected_dtype=np.float32)
+
+        self.render_buffer_data_externally_updated()
+
 
     ## Options
    

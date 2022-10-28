@@ -55,6 +55,7 @@ py::class_<StructureT> bindStructure(py::module& m, std::string name) {
 
       // structure basics
       .def("remove", &StructureT::remove, "Remove the structure")
+      .def("get_unique_prefix", &StructureT::uniquePrefix, "Get unique prefix")
       .def("set_enabled", &StructureT::setEnabled, "Enable the structure")
       .def("enable_isolate", &StructureT::enableIsolate, "Enable the structure, disable all of same type")
       .def("is_enabled", &StructureT::isEnabled, "Check if the structure is enabled")
@@ -75,6 +76,8 @@ py::class_<StructureT> bindStructure(py::module& m, std::string name) {
       .def("translate", [](StructureT& s, Eigen::Vector3f T) { s.translate(eigen2glm(T)); }, "apply the given translation to the shape, updating its position")
       .def("get_transform", [](StructureT& s) { return glm2eigen(s.getTransform()); }, "get the current 4x4 transform matrix")
       .def("get_position", [](StructureT& s) { return glm2eigen(s.getPosition()); }, "get the position of the shape origin after transform");
+
+
   // clang-format on
 }
 
@@ -89,16 +92,18 @@ py::class_<ScalarQ> bindScalarQuantity(py::module& m, std::string name) {
       .def("set_isoline_width", &ScalarQ::setIsolineWidth, "Set isoline width");
 }
 
-template<typename VolumeMeshVertexScalarQuantity>
+template <typename VolumeMeshVertexScalarQuantity>
 py::class_<VolumeMeshVertexScalarQuantity> bindVMVScalarQuantity(py::module& m, std::string name) {
   return py::class_<VolumeMeshVertexScalarQuantity>(m, name.c_str())
-    .def("set_enabled", &VolumeMeshVertexScalarQuantity::setEnabled, "Set enabled")
-    .def("set_color_map", &VolumeMeshVertexScalarQuantity::setColorMap, "Set color map")
-    .def("set_map_range", &VolumeMeshVertexScalarQuantity::setMapRange, "Set map range")
-    .def("set_isoline_width", &VolumeMeshVertexScalarQuantity::setIsolineWidth, "Set isoline width")
-    .def("set_level_set_enable", &VolumeMeshVertexScalarQuantity::setEnabledLevelSet, "Set level set rendering enabled")
-    .def("set_level_set_value", &VolumeMeshVertexScalarQuantity::setLevelSetValue, "Set level set value")
-    .def("set_level_set_visible_quantity", &VolumeMeshVertexScalarQuantity::setLevelSetVisibleQuantity, "Set quantity to show on level set");
+      .def("set_enabled", &VolumeMeshVertexScalarQuantity::setEnabled, "Set enabled")
+      .def("set_color_map", &VolumeMeshVertexScalarQuantity::setColorMap, "Set color map")
+      .def("set_map_range", &VolumeMeshVertexScalarQuantity::setMapRange, "Set map range")
+      .def("set_isoline_width", &VolumeMeshVertexScalarQuantity::setIsolineWidth, "Set isoline width")
+      .def("set_level_set_enable", &VolumeMeshVertexScalarQuantity::setEnabledLevelSet,
+           "Set level set rendering enabled")
+      .def("set_level_set_value", &VolumeMeshVertexScalarQuantity::setLevelSetValue, "Set level set value")
+      .def("set_level_set_visible_quantity", &VolumeMeshVertexScalarQuantity::setLevelSetVisibleQuantity,
+           "Set quantity to show on level set");
 }
 
 // Add common bindings for all color quantities

@@ -77,7 +77,10 @@ PYBIND11_MODULE(polyscope_bindings, m) {
       },
       py::arg("forFrames")=std::numeric_limits<size_t>::max()
   );
-
+  
+  // === Render engine related things
+  m.def("get_render_engine_backend_name", &ps::render::getRenderEngineBackendName);
+  
   // === Structure management
   m.def("remove_all_structures", &ps::removeAllStructures, "Remove all structures from polyscope");
   
@@ -211,6 +214,17 @@ PYBIND11_MODULE(polyscope_bindings, m) {
 
   m.def("add_scene_slice_plane", ps::addSceneSlicePlane, "add a slice plane", py::return_value_policy::reference);
   m.def("remove_last_scene_slice_plane", ps::removeLastSceneSlicePlane, "remove last scene plane");
+  
+
+  // === Rendering engine bits
+  // --- EXPERIMENTAL & MAY CHANGE ---
+  py::class_<ps::render::AttributeBuffer, std::shared_ptr<ps::render::AttributeBuffer>>(m, "AttributeBuffer")
+        //.def(py::init<const std::string &>())
+        .def("is_set", &ps::render::AttributeBuffer::isSet)
+        .def("get_data_size", &ps::render::AttributeBuffer::getDataSize)
+        .def("get_unique_id", &ps::render::AttributeBuffer::getUniqueID)
+        .def("get_native_buffer_id", &ps::render::AttributeBuffer::getNativeBufferID)
+  ;
   
   // === Enums
   
